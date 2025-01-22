@@ -23,7 +23,7 @@ export default function Sidebar() {
 
   return (
     <div className="w-64 bg-gray-900 text-white p-4 flex flex-col">
-      <Button className="mb-4 w-full" variant="outline" onClick={handleNewChat}>
+      <Button className="mb-4 w-full" variant="secondary" onClick={handleNewChat}>
         <PlusCircle className="mr-2 h-4 w-4" /> New Chat
       </Button>
       <div className="flex-grow overflow-y-auto">
