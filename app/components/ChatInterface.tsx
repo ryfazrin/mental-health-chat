@@ -1,25 +1,31 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Send } from "lucide-react"
-
-type Message = {
-  role: "user" | "assistant"
-  content: string
-}
+import { mockApi, Message } from "../api/mockApi"
 
 export default function ChatInterface() {
   const [messages, setMessages] = useState<Message[]>([])
   const [input, setInput] = useState("")
 
-  const handleSend = () => {
+  useEffect(() => {
+    const fetchMessages = async () => {
+      const fetchedMessages = await mockApi.getMessages()
+      setMessages(fetchedMessages)
+    }
+    fetchMessages()
+  }, [])
+
+  const handleSend = async () => {
     if (input.trim()) {
-      setMessages([...messages, { role: "user", content: input }])
-      // Here you would typically send the message to your AI backend
-      // and then add the response to the messages
+      const userMessage: Message = { role: "user", content: input }
+      setMessages([...messages, userMessage])
       setInput("")
+
+      const assistantMessage = await mockApi.sendMessage(input)
+      setMessages((prevMessages) => [...prevMessages, assistantMessage])
     }
   }
 
