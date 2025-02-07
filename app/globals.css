@@ -92,3 +92,24 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+@keyframes dot-blink {
+  0% {
+    content: ".";
+  }
+  33% {
+    content: "..";
+  }
+  66% {
+    content: "...";
+  }
+  100% {
+    content: ".";
+  }
+}
+
+.dot {
+  display: inline-block;
+  font-size: 24px;
+  animation: dot-blink 1.5s infinite;
+}

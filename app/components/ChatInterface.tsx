@@ -14,11 +14,11 @@ interface Message {
   content: string;            // Isi pesan
 }
 
-
 export default function ChatInterface() {
   const { toast } = useToast();
   const [messages, setMessages] = useState<Message[]>([])
   const [input, setInput] = useState("")
+  const [loading, setLoading] = useState(false) // Menambahkan state loading
 
   useEffect(() => {
     const initialMessage: Message = {
@@ -33,6 +33,7 @@ export default function ChatInterface() {
       const userMessage: Message = { role: "user", content: input }
       setMessages([...messages, userMessage])
       setInput("")
+      setLoading(true) // Set loading menjadi true ketika menunggu balasan
 
       try {
         // Mengirim request ke API dengan payload
@@ -66,6 +67,8 @@ export default function ChatInterface() {
             <ToastAction altText="Close">Close</ToastAction>
           ),
         });
+      } finally {
+        setLoading(false) // Set loading menjadi false setelah mendapatkan balasan
       }
     }
   }
@@ -84,6 +87,13 @@ export default function ChatInterface() {
             </div>
           </div>
         ))}
+        {loading && (
+          <div className="mb-4 text-left">
+            <div className="inline-block p-2 rounded-lg bg-gray-200 text-gray-800">
+              <span className="dot">...</span> {/* Tampilkan animasi titik */}
+            </div>
+          </div>
+        )}
       </div>
       <div className="p-4 border-t">
         <div className="flex items-center">
