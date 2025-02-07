@@ -4,18 +4,28 @@ import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Send } from "lucide-react"
-import { mockApi, Message } from "../api/mockApi"
+import axios from "axios"
+import { useToast } from "@/hooks/use-toast"
+import { ToastAction } from "@/components/ui/toast"
+import { API_BASE_URL, ENDPOINTS } from "@/constants/endpoints"
+
+interface Message {
+  role: "user" | "assistant";  // Role bisa berupa 'user' atau 'assistant'
+  content: string;            // Isi pesan
+}
+
 
 export default function ChatInterface() {
+  const { toast } = useToast();
   const [messages, setMessages] = useState<Message[]>([])
   const [input, setInput] = useState("")
 
   useEffect(() => {
-    const fetchMessages = async () => {
-      const fetchedMessages = await mockApi.getMessages()
-      setMessages(fetchedMessages)
+    const initialMessage: Message = {
+      role: "assistant",
+      content: "Hai! Saya di sini untuk membantu Anda. Sebelum kita mulai, boleh kenalan dulu? 😊\n📝 Ketik nama, usia, dan gender Anda dalam format berikut:*\n📌 Nama - Usia - Gender (L/P)"
     }
-    fetchMessages()
+    setMessages([initialMessage])
   }, [])
 
   const handleSend = async () => {
@@ -24,8 +34,39 @@ export default function ChatInterface() {
       setMessages([...messages, userMessage])
       setInput("")
 
-      const assistantMessage = await mockApi.sendMessage(input)
-      setMessages((prevMessages) => [...prevMessages, assistantMessage])
+      try {
+        // Mengirim request ke API dengan payload
+        const response = await axios.post(`${API_BASE_URL}${ENDPOINTS.START}`, {
+          message: input
+        })
+
+        if (response.data.success) {
+          const assistantMessage: Message = {
+            role: "assistant",
+            content: response.data.chat.response
+          }
+          setMessages((prevMessages) => [...prevMessages, assistantMessage])
+        } else {
+          toast({
+            variant: "destructive",
+            title: "Uh oh! Something went wrong.",
+            description: "Error sending message",
+            action: (
+              <ToastAction altText="Close">Close</ToastAction>
+            ),
+          });
+        }
+      } catch (error) {
+        console.error("Error sending message:", error)
+        toast({
+          variant: "destructive",
+          title: "Uh oh! Something went wrong.",
+          description: "Error sending message",
+          action: (
+            <ToastAction altText="Close">Close</ToastAction>
+          ),
+        });
+      }
     }
   }
 
@@ -51,7 +92,7 @@ export default function ChatInterface() {
             onChange={(e) => setInput(e.target.value)}
             placeholder="Type your message here..."
             className="flex-grow mr-2"
-            onKeyPress={(e) => e.key === "Enter" && handleSend()}
+            onKeyUp={(e) => e.key === "Enter" && handleSend()}
           />
           <Button onClick={handleSend}>
             <Send className="h-4 w-4" />
@@ -61,4 +102,3 @@ export default function ChatInterface() {
     </div>
   )
 }
-
