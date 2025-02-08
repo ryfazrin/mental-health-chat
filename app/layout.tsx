@@ -6,8 +6,8 @@ import { Toaster } from "@/components/ui/toaster"
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "ChatGPT Clone",
-  description: "A simple ChatGPT-like interface",
+  title: "Mental Health Chat",
+  description: "A simple Mental Health Chat interface",
 }
 
 export default function RootLayout({
