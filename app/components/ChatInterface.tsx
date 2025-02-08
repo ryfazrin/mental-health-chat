@@ -87,26 +87,6 @@ export default function ChatInterface() {
     }
   }
 
-  const typeMessageWithNewlines = (messageContent: string) => {
-    // Split the message by newline character
-    const lines = messageContent.split("\n");
-
-    return lines.map((line, index) => (
-      <Typewriter
-        key={index}
-        onInit={(typewriter) => {
-          typewriter
-            .typeString(line)
-            .pauseFor(500) // Pause after each line
-            .start();
-        }}
-        options={{
-          delay: 50, // Adjust the typing speed for each line
-        }}
-      />
-    ));
-  }
-
   return (
     <div className="flex-1 flex flex-col">
       <div className="flex-1 overflow-y-auto p-4">
@@ -114,7 +94,7 @@ export default function ChatInterface() {
           <div key={index} className={`mb-4 ${message.role === "user" ? "text-right" : "text-left"}`}>
             <div
               className={`inline-block p-2 rounded-lg ${
-                message.role === "user" ? "bg-blue-500 text-white" : "bg-gray-200 text-gray-800"
+                message.role === "user" ? "bg-black text-white" : "bg-gray-200 text-gray-800"
               }`}
             >
               {message.role === "assistant" ? (
@@ -127,6 +107,7 @@ export default function ChatInterface() {
                   }}
                   options={{
                     delay: 10,  // Adjust this number to control speed (smaller is faster)
+                    // breakLines: true,
                   }}
                 />
               ) : (
