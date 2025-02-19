@@ -15,7 +15,7 @@ interface Message {
   content: string;
 }
 
-export default function ChatInterface() {
+export default function ChatInterface({ className }: any) {
   const { toast } = useToast();
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
@@ -38,7 +38,7 @@ export default function ChatInterface() {
   const formatMessageContent = (content: string) => {
     return content.replace(/\*(.*?)\*/g, "<b>$1</b>");
   };
-
+  
   const handleSend = async () => {
     if (!input.trim()) return;
     
@@ -89,7 +89,7 @@ export default function ChatInterface() {
   };
 
   return (
-    <div className="flex-1 flex flex-col h-screen max-w-full sm:max-w-lg mx-auto border rounded-lg shadow-md bg-white">
+    <div className={`flex-1 flex flex-col ${className}`}>
       <div className="flex-1 overflow-y-auto p-4">
         {messages.map((message, index) => (
           <div key={index} className={`mb-4 ${message.role === "user" ? "text-right" : "text-left"}`}>

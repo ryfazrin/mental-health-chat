@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button"
 import { PlusCircle, MessageCircle, Brain } from "lucide-react"
 import { mockApi, type Chat } from "../api/mockApi"
 
-export default function Sidebar() {
+export default function Sidebar({ className }: any) {
   const [chatHistory, setChatHistory] = useState<Chat[]>([])
 
   useEffect(() => {
@@ -22,7 +22,7 @@ export default function Sidebar() {
   }
 
   return (
-    <div className="w-64 bg-gray-900 text-white p-4 flex flex-col">
+    <div className={`w-64 bg-gray-900 text-white p-4 flex flex-col ${className}`}>
       <Button className="mb-4 w-full" variant="secondary" onClick={handleNewChat}>
         <Brain className="mr-2 h-4 w-4" /> Mental Health Chat
       </Button>
