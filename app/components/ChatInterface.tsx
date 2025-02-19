@@ -35,6 +35,10 @@ export default function ChatInterface() {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
+  const formatMessageContent = (content: string) => {
+    return content.replace(/\*(.*?)\*/g, "<b>$1</b>");
+  };
+  
   const handleSend = async () => {
     if (!input.trim()) return;
     
@@ -93,12 +97,12 @@ export default function ChatInterface() {
               {message.role === "assistant" ? (
                 <Typewriter
                   onInit={(typewriter) => {
-                    typewriter.typeString(message.content.replace(/\n/g, '<br/>')).pauseFor(500).start();
+                    typewriter.typeString(formatMessageContent(message.content).replace(/\n/g, '<br/>')).pauseFor(500).start();
                   }}
                   options={{ delay: 10 }}
                 />
               ) : (
-                message.content
+                <span dangerouslySetInnerHTML={{ __html: formatMessageContent(message.content) }} />
               )}
             </div>
           </div>
