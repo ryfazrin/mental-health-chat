@@ -1,14 +1,14 @@
 "use client"
 
-import { useState, useEffect, useRef } from "react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Send } from "lucide-react"
-import axios from "axios"
-import { useToast } from "@/hooks/use-toast"
-import { ToastAction } from "@/components/ui/toast"
-import { API_BASE_URL, ENDPOINTS } from "@/constants/endpoints"
-import Typewriter from 'typewriter-effect';
+import { useState, useEffect, useRef } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Send } from "lucide-react";
+import axios from "axios";
+import { useToast } from "@/hooks/use-toast";
+import { ToastAction } from "@/components/ui/toast";
+import { API_BASE_URL, ENDPOINTS } from "@/constants/endpoints";
+import Typewriter from "typewriter-effect";
 
 interface Message {
   role: "user" | "assistant";
@@ -26,7 +26,8 @@ export default function ChatInterface({ className }: any) {
   useEffect(() => {
     const initialMessage: Message = {
       role: "assistant",
-      content: "Hai! Saya di sini untuk membantu Anda. Sebelum kita mulai, boleh kenalan dulu? 😊\n📝 Ketik nama, usia, dan gender Anda dalam format berikut:*\n📌 Nama - Usia - Gender (L/P)"
+      content:
+        "Hai! Saya di sini untuk membantu Anda. Sebelum kita mulai, boleh kenalan dulu? 😊\n📝 Ketik nama, usia, dan gender Anda dalam format berikut:*\n📌 Nama - Usia - Gender (L/P)",
     };
     setMessages([initialMessage]);
   }, []);
@@ -38,10 +39,10 @@ export default function ChatInterface({ className }: any) {
   const formatMessageContent = (content: string) => {
     return content.replace(/\*(.*?)\*/g, "<b>$1</b>");
   };
-  
+
   const handleSend = async () => {
     if (!input.trim()) return;
-    
+
     const userMessage: Message = { role: "user", content: input };
     setMessages([...messages, userMessage]);
     setInput("");
@@ -63,7 +64,7 @@ export default function ChatInterface({ className }: any) {
           role: "assistant",
           content: response.data.chat.response,
         };
-        
+
         setTimeout(() => {
           setMessages((prevMessages) => [...prevMessages, assistantMessage]);
         }, 1500);
@@ -92,17 +93,36 @@ export default function ChatInterface({ className }: any) {
     <div className={`flex-1 flex flex-col ${className}`}>
       <div className="flex-1 overflow-y-auto p-4">
         {messages.map((message, index) => (
-          <div key={index} className={`mb-4 ${message.role === "user" ? "text-right" : "text-left"}`}>
-            <div className={`inline-block p-2 rounded-lg ${message.role === "user" ? "bg-black text-white" : "bg-gray-200 text-gray-800"}`}>
+          <div
+            key={index}
+            className={`mb-4 ${message.role === "user" ? "text-right" : "text-left"}`}
+          >
+            <div
+              className={`inline-block p-2 rounded-lg ${
+                message.role === "user"
+                  ? "bg-black text-white"
+                  : "bg-gray-200 text-gray-800"
+              }`}
+            >
               {message.role === "assistant" ? (
                 <Typewriter
                   onInit={(typewriter) => {
-                    typewriter.typeString(formatMessageContent(message.content).replace(/\n/g, '<br/>')).pauseFor(500).start();
+                    typewriter
+                      .typeString(formatMessageContent(message.content).replace(/\n/g, "<br/>"))
+                      .pauseFor(500)
+                      .callFunction(() => {
+                        document.querySelector(".Typewriter__cursor")?.remove();
+                      })
+                      .start();
                   }}
                   options={{ delay: 10 }}
                 />
               ) : (
-                <span dangerouslySetInnerHTML={{ __html: formatMessageContent(message.content) }} />
+                <span
+                  dangerouslySetInnerHTML={{
+                    __html: formatMessageContent(message.content),
+                  }}
+                />
               )}
             </div>
           </div>
